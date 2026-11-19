@@ -1,6 +1,6 @@
 import { Collection } from 'discord.js';
 import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const archivos = (dir) =>
@@ -15,6 +15,7 @@ export async function loadCommands() {
   const commands = new Collection();
   for (const file of archivos(fileURLToPath(new URL('./commands', import.meta.url)))) {
     const command = await importar(file);
+    command.category = basename(dirname(file)); // la carpeta es la categoría
     commands.set(command.data.name, command);
   }
   return commands;
